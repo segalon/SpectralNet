@@ -14,7 +14,7 @@ from sklearn.metrics import normalized_mutual_info_score as nmi
 import keras.backend as K
 from keras.models import Model, load_model
 from keras.layers import Input, Lambda
-from keras.optimizers import RMSprop
+from tensorflow.keras.optimizers import RMSprop
 
 from core import train
 from core import costs
