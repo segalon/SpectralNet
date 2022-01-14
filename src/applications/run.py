@@ -53,7 +53,7 @@ if args.dset == 'uci':
         'siam_ne': 400,                     # number of training epochs for siamese net
         'spec_ne': 400,                     # number of training epochs for spectral net
         'siam_lr': 1e-3,                    # initial learning rate for siamese net
-        'spec_lr': 1e-3,                    # initial learning rate for spectral net
+        'spec_lr': 1e-5,                    # initial learning rate for spectral net
         'siam_patience': 10,                # early stopping patience for siamese net
         'spec_patience': 20,                # early stopping patience for spectral net
         'siam_drop': 0.1,                   # learning rate scheduler decay for siamese net
