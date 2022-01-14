@@ -180,7 +180,7 @@ def load_data(params):
             y_train, y_test = y[:n_train], y[n_train:]
     elif params['dset'] == 'mnist':
         x_train, x_test, y_train, y_test = get_mnist()
-     elif params['dset'] == 'uci':
+    elif params['dset'] == 'uci':
         x_train, x_test, y_train, y_test = get_uci()
         
     elif params['dset'] == 'cc':
