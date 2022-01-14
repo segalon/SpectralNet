@@ -19,6 +19,7 @@ from spectralnet import run_net
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=str, help='gpu number to use', default='')
 parser.add_argument('--dset', type=str, help='gpu number to use', default='mnist')
+
 args = parser.parse_args()
 
 # SELECT GPU
@@ -36,6 +37,44 @@ general_params = {
 params.update(general_params)
 
 # SET DATASET SPECIFIC HYPERPARAMETERS
+if args.dset == 'uci':
+    uci_params = {
+        'n_clusters': 10,                   # number of clusters in data
+        'use_code_space': False,             # enable / disable code space embedding
+        'affinity': 'knn',              # affinity type: siamese / knn
+        'n_nbrs': 25,                        # number of nonzero entries (neighbors) to use for graph Laplacian affinity matrix
+        'scale_nbr': 2,                     # neighbor used to determine scale of gaussian graph Laplacian; calculated by
+                                            # taking median distance of the (scale_nbr)th neighbor, over a set of size batch_size
+                                            # sampled from the datset
+
+        'siam_k': 2,                        # threshold where, for all k <= siam_k closest neighbors to x_i, (x_i, k) is considered
+                                            # a 'positive' pair by siamese net
+
+        'siam_ne': 400,                     # number of training epochs for siamese net
+        'spec_ne': 400,                     # number of training epochs for spectral net
+        'siam_lr': 1e-3,                    # initial learning rate for siamese net
+        'spec_lr': 1e-3,                    # initial learning rate for spectral net
+        'siam_patience': 10,                # early stopping patience for siamese net
+        'spec_patience': 20,                # early stopping patience for spectral net
+        'siam_drop': 0.1,                   # learning rate scheduler decay for siamese net
+        'spec_drop': 0.1,                   # learning rate scheduler decay for spectral net
+        'batch_size': 1024,                 # batch size for spectral net
+        'siam_reg': None,                   # regularization parameter for siamese net
+        'spec_reg': None,                   # regularization parameter for spectral net
+        'siam_n': None,                     # subset of the dataset used to construct training pairs for siamese net
+        'siamese_tot_pairs': 600000,        # total number of pairs for siamese net
+        'arch': [                           # network architecture. if different architectures are desired for siamese net and
+                                            #   spectral net, 'siam_arch' and 'spec_arch' keys can be used
+            {'type': 'relu', 'size': 1024},
+            {'type': 'relu', 'size': 1024},
+            {'type': 'relu', 'size': 512},
+            {'type': 'relu', 'size': 10},
+            ],
+        'use_approx': False,                # enable / disable approximate nearest neighbors
+        'use_all_data': True,               # enable to use all data for training (no test set)
+        }
+    params.update(uci_params)
+        
 if args.dset == 'mnist':
     mnist_params = {
         'n_clusters': 10,                   # number of clusters in data
