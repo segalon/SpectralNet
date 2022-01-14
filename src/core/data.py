@@ -12,6 +12,9 @@ from keras import backend as K
 from keras.datasets import mnist
 from keras.models import model_from_json
 
+from sklearn.datasets import load_digits
+
+
 from core import pairs
 
 def get_data(params, data=None):
@@ -177,6 +180,9 @@ def load_data(params):
             y_train, y_test = y[:n_train], y[n_train:]
     elif params['dset'] == 'mnist':
         x_train, x_test, y_train, y_test = get_mnist()
+     elif params['dset'] == 'uci':
+        x_train, x_test, y_train, y_test = get_uci()
+        
     elif params['dset'] == 'cc':
         x_train, x_test, y_train, y_test = generate_cc(params.get('n'), params.get('noise_sig'), params.get('train_set_fraction'))
         x_train, x_test = pre_process(x_train, x_test, params.get('standardize'))
@@ -335,6 +341,19 @@ def get_mnist():
     # reshape and standardize x arrays
     x_train = np.expand_dims(x_train, -1) / 255
     x_test = np.expand_dims(x_test, -1) / 255
+    return x_train, x_test, y_train, y_test
+
+def get_uci():
+    from sklearn.datasets import load_digits
+    from sklearn.preprocessing import MinMaxScaler
+    digits = load_digits()
+    x_train = digits['data']
+    y_train = digits['target']
+
+    scaler = MinMaxScaler()
+    x_train = scaler.fit_transform(x_train)
+    x_test = np.empty(x_train.shape)
+    y_test = np.empty(y_train.shape)
     return x_train, x_test, y_train, y_test
 
 def pre_process(x_train, x_test, standardize):
